@@ -21,7 +21,7 @@ To give it a try:
      pip install -r requirements.txt
 * run Step1-tomos-split.py, an example:
   ```
-  python Step1-tomos-split.py -image_raw_path = '/staff/.../4Al/15m/' --image_save_path =  '/staff/.../4Al/15m/split' -m = 2
+  python Step1-tomos-split.py -image_raw_path /staff/.../4Al/15m/ -image_save_path /staff/.../4Al/15m/split -m 2
 * run Step2-Reconstruction-tofu.py, before that you need to change the virtual environment to ufoenv: 
   ```
   deactivate
@@ -29,7 +29,7 @@ To give it a try:
   ```
   An example for running Step2-Reconstruction-tofu.py:
   ```
-  python Step2-Reconstruction-tofu.py -raw_dir = '/staff/.../4Al/15m/split/section_1' -flag_PhR = False -Ring_removal = False
+  python Step2-Reconstruction-tofu.py -raw_dir /staff/.../4Al/15m/split/section_1/ -flag_PhR False -Ring_removal False
   ```
   If you have m subsections needed to be reconstructed, remember to run Step2-Reconstruction-tofu.py for m times with raw_dir=section_i, i=1,2,..,m.
 * run Step3-Dataset_preparation.py, before that you need to change the virtual environment to venv you created:
@@ -39,7 +39,7 @@ To give it a try:
   ```
   An example for running Step3-Dataset_preparation.py:
   ```
-  python Step3-Dataset_preparation.py -sli_dir = '/staff/.../4Al/15m/split/' -dataset_dir = Dataset -gv_255 = True -m = 2
+  python Step3-Dataset_preparation.py -sli_dir /staff/.../4Al/15m/split/ -dataset_dir Dataset -gv_255 True -m 2
   ```
   Now you should have the h5 file saved in Dataset.
 
@@ -50,5 +50,5 @@ To give it a try:
   Now you should have a folder /Output/<your dataset's name>, with 
 * run Step5-N2I-infer.py, an example:
   ```
-  python Step5-N2I-infer.py -mdfn = '580train_N2I_scaffold_Ring_removal_size_512_ssim_output' -mdl = 'N2I-it03000.h5' -dsfn = 'Dataset/' -h5fn = '580train_N2I_scaffold_Ring_removal_size_512.h5'
+  python Step5-N2I-infer.py -mdfn 580train_N2I_scaffold_Ring_removal_size_512_ssim_output -mdl N2I-it03000.h5 -dsfn Dataset/ -h5fn 580train_N2I_scaffold_Ring_removal_size_512.h5
   ```
