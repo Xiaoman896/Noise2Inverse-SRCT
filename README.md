@@ -45,7 +45,7 @@ To give it a try:
 
 * run Step4-N2I-main.py, an example:
   ```
-  python Step4-N2I-main.py -h5fn = '580train_N2I_scaffold_Ring_removal_size_512.h5'
+  python Step4-N2I-main.py -h5fn 580train_N2I_scaffold_Ring_removal_size_512.h5
   ```
   Now you should have a folder /Output/<your dataset's name>, with 
 * run Step5-N2I-infer.py, an example:
