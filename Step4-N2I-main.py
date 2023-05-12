@@ -25,7 +25,7 @@ args, unparsed = parser.parse_known_args()
 if len(unparsed) > 0:
     print('Unrecognized argument(s): \n%s \nProgram exiting ... ... ' % '\n'.join(unparsed))
     exit(0)
-
+os.mkdir('Output')
 if len(args.gpus) > 0:
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpus
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable printing INFO, WARNING, and ERROR
