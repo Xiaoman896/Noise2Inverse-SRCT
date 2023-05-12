@@ -18,7 +18,11 @@ parser.add_argument('-start_column', type=int, default=512, help='For cropping: 
 parser.add_argument('-width', type=int, default=512, help='For cropping: Cropped region size (can be ); It is only enable when crop = True')
 parser.add_argument('-m', type=int, default=2, help='Number of sections')
 args, unparsed = parser.parse_known_args()
-
+if os.path.isdir(args.dataset_dir):
+    print(f"saving the h5 file in {args.dataset_dir}")
+else:
+    os.mkdir(args.dataset_dir) # to save temp output
+    print(f"creating the folder {args.dataset_dir}!")
 
 # Get the list of TIFF files in the folder section_1 and use the strategy of X:1 Noise2Inverse
 sli_files_1 = sorted([f for f in os.listdir(os.path.join(args.sli_dir, f"section_1/sli_Ring_removal/")) if f.endswith(".tif")])
