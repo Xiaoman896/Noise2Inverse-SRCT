@@ -4,9 +4,9 @@ from PIL import Image
 
 # Path to directory containing TIFF images
 parser = argparse.ArgumentParser(description='Split the tomos for sub-reconstruction')
-parser.add_argument('-image_raw_path', type=str, default='/staff/duanx/Desktop/Network_Data_projects/prj35G12338/BMIT/rec/2022-5-27-ID/Xiaoman/Different_CL/4Al/15m/',
+parser.add_argument('-image_raw_path', type=str, required = True,
                     help='Path including tomo/ flats/ darks/ folder')
-parser.add_argument('-image_save_path', type=str, default='/staff/duanx/Desktop/Network_Data_projects/prj35G12338/BMIT/rec/2022-5-27-ID/Xiaoman/Different_CL/4Al/15m/split',
+parser.add_argument('-image_save_path', type=str, required = True,
                     help='Path for saving the splitted tomo files')
 parser.add_argument('-m', type=int, default=2, help='Number of sections')
 
