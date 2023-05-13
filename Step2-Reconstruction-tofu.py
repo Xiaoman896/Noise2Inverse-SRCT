@@ -7,19 +7,23 @@ import subprocess
 import time
 from datetime import datetime
 from PIL import Image
+starttime = datetime.now()
 
 # Path to directory containing TIFF images
 parser = argparse.ArgumentParser(description='Reconstruction with tofu ez')
 parser.add_argument('-raw_dir', type=str, default='/staff/duanx/Desktop/Network_Data_projects/prj35G12338/BMIT/rec/2022-5-27-ID/Xiaoman/Different_CL/4Al/15m/split/section_2/',
                     help='Path including tomo/ flats/ darks/ folder')
 parser.add_argument('-flag_PhR', type=bool, default=False, help='Phase retrieval used, True or False')
+parser.add_argument('-energy', type=int, default=30, help='beam energy in keV')
+parser.add_argument('-distance', type=int, default=1.5, help='sample to detector distance in meters')
+parser.add_argument('-pixelsize', type=int, default=13e-6, help='pixelsize in meters')
+parser.add_argument('-deltabeta', type=int, default=200, help='delta over beta ratio')
 parser.add_argument('-CoR_auto', type=bool, default=True, help='Center of rotation - automatic calculation, True: enable; False:disable')
 parser.add_argument('-CoR_manu', type=float, default=1028, help='Center of rotation - manual defination, CoR_manu only works when CoR_auto is False')
 parser.add_argument('-Ring_removal', type=bool, default=True, help='Ring artifacts removal, True: enable; False:disable')
-
+parser.add_argument('-Delete_temp', type=bool, default=True, help='Delete temporary folder after')
 args, unparsed = parser.parse_known_args()
 
-starttime = datetime.now()
 present_dir = args.raw_dir
 
 def find_rotation_axis(proj_start, proj_end):
@@ -78,10 +82,10 @@ pady = (padheight-number)/2
 
 
 # phase retreival
-energy = 30 # in keV
-distance = 1.5 # in meters
-pixelsize = 13e-6 # in microns
-deltabeta = 2000
+energy = args.energy
+distance = args.distance
+pixelsize = args.pixelsize
+deltabeta = args.deltabeta
 regrate = 0.4339*np.log(deltabeta)+0.0034
 
 # reconstruction y-position
@@ -92,16 +96,21 @@ y_all = np.arange(np.ceil(-height/2),np.ceil(height/2+1),y_step)
 y_some = np.arange(np.ceil(-y_thick/2),np.ceil(y_thick/2+1),y_step)
 regionstart = y_all[y_start]
 regionend = y_all[y_start+y_thick]
+
 ################## COMMANDS ##################
-#
+
+# Reconstruction
 if args.Ring_removal == False:
 
+    # Reconstruct
     if args.flag_PhR == False: ##only flat-dark correction
         os.system("tofu flatcorrect --flats " + PATH + "flats/ --darks " + PATH+ "darks/ --projections " + PATH + "tomo/ --output " +
             PATH + "tomo-FD/proj_%04i.tif --fix-nan-and-inf --output-bytes-per-file 1 --absorptivity")
 
         os.system("tofu tomo --projections " + PATH + "tomo-FD/ --output " + PATH +
                   "sli/sli_%05i.tif --fix-nan-and-inf --output-bytes-per-file 1 --axis " + str(CoR))
+
+    # Reconstruct without Phase Retreival
     else:
         os.system("tofu preprocess --fix-nan-and-inf --projection-filter none --delta 1e-6 --darks " + PATH + "darks --flats " + PATH +
             "flats --projections " + PATH + "tomo --output " + PATH + "tomo-FD-PhR/proj-%04i.tif --energy " + str(energy) +
@@ -113,34 +122,35 @@ if args.Ring_removal == False:
 
 else:
 
+    # Reconstruct without Ring Removal
     if args.flag_PhR == False:  ##only flat-dark correction
-        os.system(
-            "tofu flatcorrect --flats " + PATH + "flats/ --darks " + PATH + "darks/ --projections " + PATH + "tomo/ --output " +
-            TEMP + "/proj-step1/proj-%04i.tif --fix-nan-and-inf --output-bytes-per-file 0 --absorptivity")
+        os.system("tofu flatcorrect --flats " + PATH + "flats/ --darks " + PATH + "darks/ --projections " + PATH + "tomo/ --output " +
+                  TEMP + "/proj-step1/proj-%04i.tif --fix-nan-and-inf --output-bytes-per-file 0 --absorptivity")
+
+    # Reconstruct without Ring Removal and Phase Retrieval
     else:
-        os.system(
-            "tofu preprocess --fix-nan-and-inf --projection-filter none --delta 1e-6 --darks " + PATH + "darks --flats " + PATH +
-            "flats --projections " + PATH + "tomo --output " + TEMP + "/proj-step1/proj-%04i.tif --energy " + str(
-                energy) + " --propagation-distance " + str(distance) + " --pixel-size " + str(
-                pixelsize) + " --regularization-rate " + str(regrate) + " --output-bytes-per-file 0")
-    os.system(
-        "tofu sinos --projections " + TEMP + "/proj-step1 --output " + TEMP + "/sinos/sin-%04i.tif --number " + str(
-            number) + " --height " + str(height) + " --output-bytes-per-file 0")
+        os.system("tofu preprocess --fix-nan-and-inf --projection-filter none --delta 1e-6 --darks " + PATH + "darks --flats " + PATH +
+                  "flats --projections " + PATH + "tomo --output " + TEMP + "/proj-step1/proj-%04i.tif --energy " + str(
+                  energy) + " --propagation-distance " + str(distance) + " --pixel-size " + str(
+                  pixelsize) + " --regularization-rate " + str(regrate) + " --output-bytes-per-file 0")
 
-    os.system('ufo-launch read path=' + TEMP + '/sinos ! pad x=' + str(padx) + ' width=' + str(padwidth) + ' y=' + str(
-        pady) + ' height=' + str(
+    os.system("tofu sinos --projections " + TEMP + "/proj-step1 --output " + TEMP + "/sinos/sin-%04i.tif --number " + str(number) + " --height " + str(height) + " --output-bytes-per-file 0")
+    os.system('ufo-launch read path=' + TEMP + '/sinos ! pad x=' + str(padx) + ' width=' + str(padwidth) + ' y=' + str(pady) + ' height=' + str(
         padheight) + ' addressing-mode=mirrored_repeat ! fft dimensions=2 ! filter-stripes horizontal-sigma=40 vertical-sigma=1 ! ifft dimensions=2 crop-width=' + str(
-        padwidth) + ' crop-height=' + str(padheight) + ' ! crop x=' + str(padx) + ' width=' + str(
-        padwidth) + ' y=' + str(pady) + ' height=' + str(
+        padwidth) + ' crop-height=' + str(padheight) + ' ! crop x=' + str(padx) + ' width=' + str(padwidth) + ' y=' + str(pady) + ' height=' + str(
         number) + ' ! write filename="' + TEMP + '/sinos-filt/sin-%04i.tif" bytes-per-file=0 tiff-bigtiff=False')
-    os.system(
-        "tofu sinos --projections " + TEMP + "/sinos-filt --output " + TEMP + "/proj-step2/proj-%04i.tif --number " + str(
-            height) + " --output-bytes-per-file 0")
-    os.system(
-        "tofu reco --overall-angle 180  --projections " + TEMP + "/proj-step2 --output " + PATH + "/sli_Ring_removal/sli --center-position-x " + str(
-            CoR) + " --number " + str(number) + " --volume-angle-z 0.00000 --region=" + str(regionstart) + "," + str(
-            regionend) + "," + str(y_step) + " --output-bytes-per-file 0 --slice-memory-coeff=0.7")
+    os.system("tofu sinos --projections " + TEMP + "/sinos-filt --output " + TEMP + "/proj-step2/proj-%04i.tif --number " + str(
+              height) + " --output-bytes-per-file 0")
+    os.system("tofu reco --overall-angle 180  --projections " + TEMP + "/proj-step2 --output " + PATH + "/sli_Ring_removal/sli --center-position-x " + str(
+              CoR) + " --number " + str(number) + " --volume-angle-z 0.00000 --region=" + str(regionstart) + "," + str(
+              regionend) + "," + str(y_step) + " --output-bytes-per-file 0 --slice-memory-coeff=0.7")
 
+# Remove temporary folder
+if args.Delete_temp == True
+    if os.path.isdir(TEMP):
+        os.system("rm -r "+TEMP)
+
+# This shouldn't be necessary
 sli_files = sorted([f for f in os.listdir(os.path.join(PATH, f"sli_Ring_removal/")) if f.endswith(".tif")])
 # crop the sli image
 for i, file_name in enumerate(sli_files):
