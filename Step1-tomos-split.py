@@ -1,6 +1,7 @@
 import os, argparse, shutil
 import numpy as np
 from PIL import Image
+from datetime import datetime
 
 # Path to directory containing TIFF images
 parser = argparse.ArgumentParser(description='Split the tomos for sub-reconstruction')
@@ -11,6 +12,11 @@ parser.add_argument('-image_save_path', type=str, required = True,
 parser.add_argument('-m', type=int, default=2, help='Number of sections')
 
 args, unparsed = parser.parse_known_args()
+
+
+starttime = datetime.now()
+
+
 # Number of sections to split the images into
 # create the output directories
 for i in range(1, args.m+1):
@@ -52,3 +58,8 @@ for i in range(1, args.m+1):
         source_file = os.path.join(args.image_raw_path, f"darks/",f)
         dest_file = os.path.join(args.image_save_path, f"section_{i}/darks/",f)
         shutil.copyfile(source_file, dest_file)
+
+
+elapsedtime = str(datetime.now() - starttime)
+print("Finisehd in " + elapsedtime)
+starttime = datetime.now()
