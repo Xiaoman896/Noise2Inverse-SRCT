@@ -34,8 +34,6 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
-
-
 def find_rotation_axis(proj_start, proj_end):
     proj_start = np.array(proj_start)
     proj_end_mirr = np.flip(proj_end, axis=1)
