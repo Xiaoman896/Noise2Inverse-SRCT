@@ -33,16 +33,16 @@ if os.path.isdir(PATH+"/tomo")+os.path.isdir(PATH+"/flats")+os.path.isdir(PATH+"
 
 	for i in range(splits):
 		# make output folder
-		if not os.path.isdir(os.path.join(SAVE,"section_"str(i+1))):
-			os.mkdir(os.path.join(SAVE,"section_"str(i+1)))
-			os.mkdir(os.path.join(SAVE,"section_"str(i+1),"tomo"))
+		if not os.path.isdir(os.path.join(SAVE,"section_"+str(i+1))):
+			os.mkdir(os.path.join(SAVE,"section_"+str(i+1)))
+			os.mkdir(os.path.join(SAVE,"section_"+str(i+1),"tomo"))
 		# copy every i-th file
 		# for j in np.arange(i,filesnum,splits):
-		for j in progressbar(np.arange(i,filesnum,splits), "Making split #"+str(i)+": "):
+		for j in progressbar(np.arange(i,filesnum,splits), "Making split #"+str(i+1)+": "):
 			# print(files[j])
-			shutil.copy(os.path.join(PATH,"tomo",files[j]), os.path.join(SAVE,"section_"str(i+1),"tomo",files[j]))
-		os.system("cp -r "+PATH+"/flats "+os.path.join(SAVE,"section_"str(i+1),"flats"))
-		os.system("cp -r "+PATH+"/darks "+os.path.join(SAVE,"section_"str(i+1),"darks"))
+			shutil.copy(os.path.join(PATH,"tomo",files[j]), os.path.join(SAVE,"section_"+str(i+1),"tomo",files[j]))
+		os.system("cp -r "+PATH+"/flats "+os.path.join(SAVE,"section_"+str(i+1),"flats"))
+		os.system("cp -r "+PATH+"/darks "+os.path.join(SAVE,"section_"+str(i+1),"darks"))
 
 # otherwise notify that raw data is incomplete
 else:
