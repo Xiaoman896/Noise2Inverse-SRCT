@@ -9,7 +9,7 @@ Paper: [Hendriksen, A. A., Pelt, D. M., & Batenburg, K. J. (2020). Noise2inverse
 
 [![DOI](https://zenodo.org/badge/DOI/10.1109/TCI.2020.3019647.svg)](https://doi.org/10.1109/TCI.2020.3019647)
 
-To give it a try:
+## To give it a try:
 
 * prepare your raw CT collection data (folder contains three dataset: /tomo /flats /darks)
 * create your virtual environment and install dependencies: 
