@@ -9,7 +9,7 @@ Paper: [Hendriksen, A. A., Pelt, D. M., & Batenburg, K. J. (2020). Noise2inverse
 
 [![DOI](https://zenodo.org/badge/DOI/10.1109/TCI.2020.3019647.svg)](https://doi.org/10.1109/TCI.2020.3019647)
 
-## To give it a try:
+## Setup Environemnets:
 
 * prepare your raw CT collection data (folder contains three dataset: /tomo /flats /darks)
 * create your virtual environment and install dependencies: 
@@ -22,6 +22,7 @@ Paper: [Hendriksen, A. A., Pelt, D. M., & Batenburg, K. J. (2020). Noise2inverse
      pip install --upgrade pip
      pip install -r requirements.txt
           or pip install numpy, tensorflow, imageio, scipy, tifffile
+  7. Follow instructions from https://github.com/sgasilov/ez_ufo to setup ufoenv environment 
   ```
 ## Run step by step:
 * run Step1-tomos-split.py, an example:
