@@ -31,9 +31,9 @@ To give it a try:
   ```
   An example for running Step2-Reconstruction-tofu.py:
   ```
-  python Step2-Reconstruction-tofu.py -raw_dir /staff/.../4Al/15m/split/section_1/ -flag_PhR False -Ring_removal True
+  python Step2-Reconstruction-tofu.py -raw_dir /staff/.../4Al/15m/split/ -y_start 200 -y_thick 400 -y_step 5 -flag_PhR False -Ring_removal True -h_sigma 40 -v_sigma 1 -Delete_temp True
   ```
-  If you have m subsections needed to be reconstructed, remember to run Step2-Reconstruction-tofu.py for m times with raw_dir=section_i, i=1,2,..,m.
+  In the above example, only middle section would be reconstructed. Specifically from the 200th row as viewed from the X-ray projections for 400 slices in steps of 5.
 * run Step3-Dataset_preparation.py, before that you need to change the virtual environment to venv you created:
   ```
   deactivate
