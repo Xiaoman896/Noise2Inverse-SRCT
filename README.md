@@ -21,6 +21,7 @@ To give it a try:
   6. Once the virtual environment is activated, run the following command to install the dependencies from the provided requirements.txt file: 
      pip install --upgrade pip
      pip install -r requirements.txt
+          or pip install numpy, tensorflow, imageio, scipy, tifffile
 * run Step1-tomos-split.py, an example:
   ```
   python Step1-tomos-split.py -image_raw_path /staff/.../4Al/15m/ -image_save_path /staff/.../4Al/15m/split -m 2
