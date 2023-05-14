@@ -24,6 +24,8 @@ Paper: [Hendriksen, A. A., Pelt, D. M., & Batenburg, K. J. (2020). Noise2inverse
           or pip install numpy, tensorflow, imageio, scipy, tifffile
   7. Follow instructions from https://github.com/sgasilov/ez_ufo to setup ufoenv environment 
   ```
+## Run from centralized script:
+
 ## Run step by step:
 * run Step1-tomos-split.py, an example:
   ```
