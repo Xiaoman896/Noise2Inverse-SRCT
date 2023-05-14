@@ -22,6 +22,8 @@ Paper: [Hendriksen, A. A., Pelt, D. M., & Batenburg, K. J. (2020). Noise2inverse
      pip install --upgrade pip
      pip install -r requirements.txt
           or pip install numpy, tensorflow, imageio, scipy, tifffile
+```
+## Run step by step:
 * run Step1-tomos-split.py, an example:
   ```
   python Step1-tomos-split.py -image_raw_path /staff/.../4Al/15m/ -image_save_path /staff/.../4Al/15m/split -m 2
