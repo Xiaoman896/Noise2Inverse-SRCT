@@ -25,7 +25,15 @@ Paper: [Hendriksen, A. A., Pelt, D. M., & Batenburg, K. J. (2020). Noise2inverse
   7. Follow instructions from https://github.com/sgasilov/ez_ufo to setup ufoenv environment 
   ```
 ## Run from centralized script:
-
+* Locate the env.txt file. Make the first line the python environment to run tofu for CT recosntruction. Make the second line the python environment to run Noise2Inverse. Like below:
+  ```
+  /.../ufoenv/bin/activate
+  /.../venv/bin/activate
+  ```
+* Run run.py like below:
+  ```
+  python run.py -PATH /path/to/raw/data/ -SAVE /path/to/split/data/ -splits 2 -PR False -RR True -RR_h_sigma 20 -RR_v_sigma 1 -CoR_auto True -Delete_temp True -exp_name N2I -crop True -gpus 0 -lunet 4 -depth 3 -psz 64 -mbsz 32 -epoch_save 100 -maxiter 4000
+  ```
 ## Run step by step:
 * run Step1-tomos-split.py, an example:
   ```
