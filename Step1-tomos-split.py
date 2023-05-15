@@ -6,10 +6,7 @@ import shutil
 import sys
 from XFDing import progressbar2 as progressbar
 from datetime import datetime
-run = 1
 starttime = datetime.now()
-totaltime = datetime.now()
-present_dir = os.getcwd()
 
 # Path to directory containing TIFF images
 parser = argparse.ArgumentParser(description='Split the tomos for sub-reconstruction')
