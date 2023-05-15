@@ -40,7 +40,6 @@ parser.add_argument('-start_column', type=int, default=512, help='For cropping: 
 parser.add_argument('-width', type=int, default=512, help='For cropping: Cropped region size (can be ); It is only enable when crop = True')
 # Step 4 and 5 arguments
 parser.add_argument('-gpus', type=str, default="0", help='list of visiable GPUs')
-parser.add_argument('-expName', type=str, default='exp', help='Experiment name')
 parser.add_argument('-mse', type=boolean_string, default=False, help='True: use mse as loss function; False: use ssim as the loss function')
 parser.add_argument('-lunet', type=int, default=4, help='Unet layers')
 parser.add_argument('-depth', type=int, default=3, help='input depth (use for 3D CT image only)')
@@ -69,7 +68,7 @@ subprocess.call(". "+env2+" && python Step3-Dataset_preparation.py -exp_name "+a
 for f in os.listdir(args.SAVE):
 	if f.endswith(".h5"):
 		h5fn = f
-subprocess.call(". "+env2+" && python Step4-N2I-main.py -gpus "+args.gpus+" -expName "+args.expName+" -mse "+str(args.mse)+" -lunet "+str(args.lunet)+" -depth "+str(args.depth)+" -psz "+str(args.psz)+" -mbsz "+str(args.mbsz)+" -epoch_save "+str(args.epoch_save)+" -maxiter "+str(args.maxiter)+" -dsfn "+args.SAVE+" -h5fn "+h5fn+" -print "+str(args.printout), shell=True)
+subprocess.call(". "+env2+" && python Step4-N2I-main.py -gpus "+args.gpus+" -expName "+args.exp_name+" -mse "+str(args.mse)+" -lunet "+str(args.lunet)+" -depth "+str(args.depth)+" -psz "+str(args.psz)+" -mbsz "+str(args.mbsz)+" -epoch_save "+str(args.epoch_save)+" -maxiter "+str(args.maxiter)+" -dsfn "+args.SAVE+" -h5fn "+h5fn+" -print "+str(args.printout), shell=True)
 
 # Run Step 5
 mdfn = os.path.splitext(h5fn)[0]
