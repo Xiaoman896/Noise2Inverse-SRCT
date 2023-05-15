@@ -10,23 +10,28 @@ from PIL import Image
 run = 1
 starttime = datetime.now()
 
+def boolean_string(s):
+	if s not in {'False', 'True'}:
+		raise ValueError('Not a valid boolean string')
+	return s == 'True'
+
 # Path to directory containing TIFF images
 parser = argparse.ArgumentParser(description='Reconstruction with tofu ez')
 parser.add_argument('-raw_dir', type=str, default='/root', help='Path to split datasets')
 parser.add_argument('-y_start', type=int, default=0, help='position along y-axis of the projection to start CT reconstruction')
 parser.add_argument('-y_thick', type=int, default=0, help='how many lines along y-axis of projection to reconstruct')
 parser.add_argument('-y_step', type=int, default=1, help='how intermediate lines along y-axis of projection to reconstruct')
-parser.add_argument('-flag_PhR', type=bool, default=False, help='Phase retrieval used, True or False')
+parser.add_argument('-flag_PhR', type=boolean_string, default=False, help='Phase retrieval used, True or False')
 parser.add_argument('-energy', type=float, default=30, help='beam energy in keV')
 parser.add_argument('-distance', type=float, default=1.5, help='sample to detector distance in meters')
 parser.add_argument('-pixelsize', type=float, default=13e-6, help='pixelsize in meters')
 parser.add_argument('-deltabeta', type=float, default=200, help='delta over beta ratio')
-parser.add_argument('-Ring_removal', type=bool, default=False, help='Ring artifacts removal, True: enable; False:disable')
+parser.add_argument('-Ring_removal', type=boolean_string, default=False, help='Ring artifacts removal, True: enable; False:disable')
 parser.add_argument('-h_sigma', type=int, default=3, help='Ring removal attribute horizontal sigma')
 parser.add_argument('-v_sigma', type=int, default=1, help='Ring removal attribute vertical sigma')
-parser.add_argument('-CoR_auto', type=bool, default=True, help='Center of rotation - automatic calculation, True: enable; False:disable')
+parser.add_argument('-CoR_auto', type=boolean_string, default=True, help='Center of rotation - automatic calculation, True: enable; False:disable')
 parser.add_argument('-CoR_manu', type=float, default=1028, help='Center of rotation - manual defination, CoR_manu only works when CoR_auto is False')
-parser.add_argument('-Delete_temp', type=bool, default=True, help='Delete temporary folder after')
+parser.add_argument('-Delete_temp', type=boolean_string, default=True, help='Delete temporary folder after')
 args, unparsed = parser.parse_known_args()
 
 def find_rotation_axis(proj_start, proj_end):
@@ -61,13 +66,13 @@ for i in range(len(splits)):
 	width, height = im_start.size
 
 	# find the center of rotation automatically
-	if args.CoR_auto:
+	if args.CoR_auto == True:
 		im_end = Image.open(os.path.join(PATH,"tomo/",files[-1]))
 		CoR = find_rotation_axis(im_start, im_end)
-		print(f"Automatically calculated CoR is: "+str(CoR))
+		print("Automatically calculated CoR is: "+str(CoR))
 	else:
 		CoR = args.CoR_manu
-		print(f"CoR is manually defined: "+str(CoR))
+		print("CoR is manually defined: "+str(CoR))
 
 	# ring removal
 	padwidth = 2
@@ -107,7 +112,8 @@ for i in range(len(splits)):
 		y_all = np.arange(np.ceil(-newregion/2),np.ceil(newregion/2+1),1)
 		regionstart = y_all[0]
 		regionend = y_all[0+newregion]
-			
+		
+	# reconstruct	
 	if args.Ring_removal == False:
 		# Reconstruct without Ring Removal or Phase Retrieval
 		if args.flag_PhR == False:
