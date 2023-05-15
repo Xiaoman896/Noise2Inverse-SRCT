@@ -1,2 +1,2 @@
 /opt/ufoenv/bin/activate
-/beamlinedata/BMIT/projects/prj35G12338/rec/Xiaoman/noise2inverse-combined/GAN/venv/bin/activate
+/staff/dingx/Desktop/Local_data/dingx/_venvs/noise2inverse/bin/activate
