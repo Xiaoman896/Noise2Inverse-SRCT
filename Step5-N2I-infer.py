@@ -22,7 +22,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable printing INFO, WARNING, and E
 
 mdl = tf.keras.models.load_model("Output/" + args.mdfn + "/" + args.mdl)
 
-args.dsfn = args.dsfn + args.h5fn
+args.dsfn = os.path.join(args.dsfn, args.h5fn)
 with h5py.File(args.dsfn, 'r') as h5fd:
     ns_img_test1 = h5fd['train_ns'][:]
     ns_img_test2 = h5fd['test_ns'][:]

@@ -10,7 +10,7 @@ import tifffile
 parser = argparse.ArgumentParser(description='UNet, for noise/artifact removal')
 parser.add_argument('-gpus',  type=str, default="0", help='list of visiable GPUs')
 parser.add_argument('-expName', type=str, default='N2I', help='Experiment name')
-parser.add_argument('-mse', type=bool, default=False, help='True: use mse as loss function; False: use ssim as the loss function')
+parser.add_argument('-mse', type=str2bool, default=False, help='True: use mse as loss function; False: use ssim as the loss function')
 parser.add_argument('-lunet', type=int, default=4, help='Unet layers')
 parser.add_argument('-depth', type=int, default=3, help='input depth (use for 3D CT image only)')
 parser.add_argument('-psz',   type=int, default=64, help='cropping patch size')
@@ -25,7 +25,8 @@ args, unparsed = parser.parse_known_args()
 if len(unparsed) > 0:
     print('Unrecognized argument(s): \n%s \nProgram exiting ... ... ' % '\n'.join(unparsed))
     exit(0)
-os.mkdir('Output')
+if not os.path.isdir('Output'):
+    os.mkdir('Output')
 if len(args.gpus) > 0:
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpus
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # disable printing INFO, WARNING, and ERROR
@@ -42,7 +43,7 @@ os.mkdir(itr_out_dir) # to save temp output
 if args.print == 0:
     sys.stdout = open('%s/%s' % (itr_out_dir, 'iter-prints.log'), 'w')
 
-args.dsfn = args.dsfn + args.h5fn
+args.dsfn = os.path.join(args.dsfn, args.h5fn)
 # build minibatch data generator with prefetch
 mb_data_iter = bkgdGen(data_generator=gen_train_batch_bg(
                                       dsfn=args.dsfn, mb_size=args.mbsz, \
