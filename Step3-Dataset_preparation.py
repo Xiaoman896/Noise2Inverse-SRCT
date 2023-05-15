@@ -4,15 +4,18 @@ import numpy as np
 from PIL import Image
 import tifffile
 
+def boolean_string(s):
+    if s not in {'False', 'True'}:
+        raise ValueError('Not a valid boolean string')
+    return s == 'True'
+
 # Set the path to the folder containing the TIFF files
 parser = argparse.ArgumentParser(description='Dataset preparation for Noise2Inverse: h5 file generation')
 parser.add_argument('-exp_name', type=str, default='scaffold', help='Name of scaned sample')
-parser.add_argument('-sli_dir', type=str, default='/staff/duanx/Desktop/Network_Data_projects/prj35G12338/BMIT/rec/2022-5-27-ID/Xiaoman/Different_CL/4Al/15m/split/',
-                    help='the path should be split folder containing section_1, ..., section_m subfolders')
-parser.add_argument('-dataset_dir', type=str, default='Dataset',
-                    help='the path for saving the h5 file')
-parser.add_argument('-gv_255', type=bool, default=True, help='Scale the grey value to 0-255')
-parser.add_argument('-crop', type=bool, default=False, help='Enable cropping by setting True')
+parser.add_argument('-sli_dir', type=str, default='/staff/duanx/Desktop/Network_Data_projects/prj35G12338/BMIT/rec/2022-5-27-ID/Xiaoman/Different_CL/4Al/15m/split/', help='the path should be split folder containing section_1, ..., section_m subfolders')
+parser.add_argument('-dataset_dir', type=str, default='Dataset', help='the path for saving the h5 file')
+parser.add_argument('-gv_255', type=boolean_string, default=True, help='Scale the grey value to 0-255')
+parser.add_argument('-crop', type=boolean_string, default=False, help='Enable cropping by setting True')
 parser.add_argument('-start_row', type=int, default=512, help='For cropping: started row index; It is only enable when crop = True')
 parser.add_argument('-start_column', type=int, default=512, help='For cropping: started column index; It is only enable when crop = True')
 parser.add_argument('-width', type=int, default=512, help='For cropping: Cropped region size (can be ); It is only enable when crop = True')
@@ -25,14 +28,14 @@ else:
     print(f"creating the folder {args.dataset_dir}!")
 
 # Get the list of TIFF files in the folder section_1 and use the strategy of X:1 Noise2Inverse
-sli_files_1 = sorted([f for f in os.listdir(os.path.join(args.sli_dir, f"section_1/sli_Ring_removal/")) if f.endswith(".tif")])
+sli_files_1 = sorted([f for f in os.listdir(os.path.join(args.sli_dir, f"section_1/sli/")) if f.endswith(".tif")])
 #
 # Read TIFF files and split into sections : target, section_1
 train_ns_target = []
 test_ns_target = []
 for i, file_name in enumerate(sli_files_1):
     print(f"Now processing image #{i}/{len(sli_files_1)} in section 1")
-    with Image.open(os.path.join(args.sli_dir, f"section_1/sli_Ring_removal/", file_name)) as tiff:
+    with Image.open(os.path.join(args.sli_dir, f"section_1/sli/", file_name)) as tiff:
         img = np.asarray(tiff)
         img = img.astype(float) # convert to float if required
         if args.crop:
@@ -58,14 +61,14 @@ train_ns_input = np.zeros(np.shape(train_ns_target))
 test_ns_input = np.zeros(np.shape(test_ns_target))
 
 for k in range(1, args.m):
-    sli_files = sorted([f for f in os.listdir(os.path.join(args.sli_dir, f"section_{k+1}/sli_Ring_removal/")) if f.endswith(".tif")])
+    sli_files = sorted([f for f in os.listdir(os.path.join(args.sli_dir, f"section_{k+1}/sli/")) if f.endswith(".tif")])
 
     # Read TIFF files and split into sections
     train_temp = []
     test_temp = []
     for i, file_name in enumerate(sli_files):
         print(f"Now processing image #{i}/{len(sli_files)} in section {k+1}")
-        with Image.open(os.path.join(args.sli_dir, f"section_{k+1}/sli_Ring_removal/", file_name)) as tiff:
+        with Image.open(os.path.join(args.sli_dir, f"section_{k+1}/sli/", file_name)) as tiff:
             img = np.asarray(tiff)
             img = img.astype(float) # convert to float if required
             if args.crop:
