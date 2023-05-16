@@ -16,16 +16,18 @@ Paper: [Hendriksen, A. A., Pelt, D. M., & Batenburg, K. J. (2020). Noise2inverse
   ```
   1. Open a terminal or command prompt.
   2. Navigate to the directory where you want to create the virtual environment (usually the path contains your script).
-  3. Run the following command to create a new virtual environment: /usr/bin/python3.6 -m venv venv
-  4. Activate the virtual environment: source venv/bin/activate
-  6. Once the virtual environment is activated, run the following command to install the dependencies from the provided requirements.txt file: 
+  3. Run the following command to create a new virtual environment: 
+     /usr/bin/python3.6 -m venv venv
+  4. Activate the virtual environment:
+     source /.../venv/bin/activate
+  6. Once the virtual environment is activated, run the following command to install the dependencies from the provided requirements.txt file:
      pip install --upgrade pip
      pip install -r requirements.txt
-          or pip install numpy, tensorflow, imageio, scipy, tifffile
-  7. Follow instructions from https://github.com/sgasilov/ez_ufo to setup ufoenv environment 
+          or pip install numpy tensorflow imageio scipy tifffile
+  7. Follow instructions from https://github.com/sgasilov/ez_ufo to setup ufoenv environment and install tofu ez for CT reconstruction
   ```
 ## Run from centralized script:
-* Locate the env.txt file. Make the first line the python environment to run tofu for CT recosntruction. Make the second line the python environment to run Noise2Inverse. Like below:
+* Locate the env.txt file. Make the first line the path to the python environment to run tofu for CT recosntruction. Make the second line the path to the python environment to run Noise2Inverse. Like below:
   ```
   /.../ufoenv/bin/activate
   /.../venv/bin/activate
